@@ -1,40 +1,28 @@
 import { Component } from '@angular/core';
 import { Car } from './car';
+import { ListingComponent } from './listing/listing.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
+  imports: [ListingComponent],
   template: `
     <h1>Saved Cars {{ savedCarList.length }}</h1>
+
     <section class="container">
-      <!-- This article element represents and entire listing -->
-      <article class="listing">
-        <div class="image-parent">
-          <img class="product-image" src="https://placehold.co/100x100" />
-        </div>
-        <section class="details">
-          <p class="title"><!-- car make and model--></p>
-          <hr />
-          <p class="detail">
-            <span>Year</span>
-            <span><!-- year --></span>
-          </p>
-          <div class="detail">
-            <span>Transmission</span>
-            <span><!-- transmission --></span>
-          </div>
-          <p class="detail">
-            <span>Mileage</span>
-            <span><!-- miles --></span>
-          </p>
-          <p class="detail">
-            <span>Price</span>
-            <span><!-- price --></span>
-          </p>
-        </section>
-      </article>
-      <!-- end car listing markup -->
+      @for (car of carList; track car.id) {
+      <app-listing [car]="car" (carSaved)="addCarToSaved($event)" />
+      } @empty {
+      <p>No listings available</p>
+      }
     </section>
+
+    <article>
+      <!-- saved cars -->
+      @for (savedCarEntry of savedCarList; track savedCarEntry.id) {
+      <p>{{ savedCarEntry.make }} {{ savedCarEntry.model }}</p>
+      }
+    </article>
   `,
   styles: [],
 })
@@ -42,6 +30,7 @@ export class AppComponent {
   savedCarList: Car[] = [];
   carList: Car[] = [
     {
+      id: 1,
       make: 'Foyoda',
       model: 'Famery',
       miles: 54354,
@@ -50,6 +39,7 @@ export class AppComponent {
       transmission: 'Automatic',
     },
     {
+      id: 2,
       make: 'Ronda',
       model: 'Disaccord',
       miles: 100000,
@@ -58,6 +48,7 @@ export class AppComponent {
       transmission: 'Automatic',
     },
     {
+      id: 3,
       make: 'Specific Motors',
       model: 'Spoke',
       miles: 100000,
@@ -66,6 +57,7 @@ export class AppComponent {
       transmission: 'Automatic',
     },
     {
+      id: 4,
       make: 'Fjord',
       model: 'Pocus',
       miles: 1,
@@ -74,4 +66,8 @@ export class AppComponent {
       transmission: 'Automatic',
     },
   ];
+
+  addCarToSaved(car: Car) {
+    this.savedCarList.push(car);
+  }
 }
